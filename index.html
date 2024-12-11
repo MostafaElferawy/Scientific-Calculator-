@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Calculator</title>
+    <style>
+        /* إعدادات عامة */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #ff7f50, #1e90ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+        }
+
+        #calculator {
+            background: #2c3e50;
+            border-radius: 10px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            width: 360px;
+            padding: 20px;
+        }
+
+        #display {
+            background: #34495e;
+            border-radius: 5px;
+            font-size: 1.8rem;
+            padding: 15px;
+            text-align: right;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        #buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            background: #1abc9c;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            padding: 15px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #16a085;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .operator {
+            background: #e67e22;
+        }
+
+        .operator:hover {
+            background: #d35400;
+        }
+
+        #clear {
+            background: #e74c3c;
+        }
+
+        #clear:hover {
+            background: #c0392b;
+        }
+
+        #equals {
+            background: #3498db;
+        }
+
+        #equals:hover {
+            background: #2980b9;
+        }
+
+        .special {
+            background: #9b59b6;
+        }
+
+        .special:hover {
+            background: #8e44ad;
+        }
+    </style>
+</head>
+<body>
+    <div id="calculator">
+        <div id="display">0</div>
+        <div id="buttons">
+            <button id="clear">C</button>
+            <button class="operator">/</button>
+            <button class="operator">*</button>
+            <button class="operator">-</button>
+            <button>7</button>
+            <button>8</button>
+            <button>9</button>
+            <button class="operator">+</button>
+            <button>4</button>
+            <button>5</button>
+            <button>6</button>
+            <button class="special">±</button>
+            <button>1</button>
+            <button>2</button>
+            <button>3</button>
+            <button id="equals">=</button>
+            <button>0</button>
+            <button class="special">(</button>
+            <button class="special">)</button>
+            <button class="special">%</button>
+        </div>
+    </div>
+
+    <script>
+        // عناصر DOM
+        const display = document.getElementById('display');
+        const buttons = document.querySelectorAll('button');
+
+        // المتغيرات
+        let currentInput = '';
+        let operator = '';
+        let firstOperand = '';
+
+        // تحديث الشاشة
+        function updateDisplay(value) {
+            display.textContent = value;
+        }
+
+        // التعامل مع الأزرار
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const value = button.textContent;
+
+                if (button.id === 'clear') {
+                    currentInput = '';
+                    operator = '';
+                    firstOperand = '';
+                    updateDisplay('0');
+                } else if (value === '=') {
+                    if (firstOperand && operator && currentInput) {
+                        const result = eval(`${firstOperand} ${operator} ${currentInput}`);
+                        updateDisplay(result);
+                        currentInput = '';
+                        operator = '';
+                        firstOperand = result;
+                    }
+                } else if (['+', '-', '*', '/'].includes(value)) {
+                    if (currentInput) {
+                        firstOperand = currentInput;
+                        operator = value;
+                        currentInput = '';
+                    }
+                } else if (value === '%') {
+                    currentInput = (parseFloat(currentInput) / 100).toString();
+                    updateDisplay(currentInput);
+                } else if (value === '±') {
+                    currentInput = (parseFloat(currentInput) * -1).toString();
+                    updateDisplay(currentInput);
+                } else {
+                    currentInput += value;
+                    updateDisplay(currentInput);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
